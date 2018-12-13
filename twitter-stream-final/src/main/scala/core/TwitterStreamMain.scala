@@ -1,8 +1,5 @@
-package core
 
-
-
-import core.Utilities._
+import Utilities._
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.streaming._
 import org.apache.spark.streaming.twitter._
@@ -11,17 +8,26 @@ import org.elasticsearch.spark.sql._
 case class Data(num: Int,brand: String)
 case class Location(lat: Double, lon: Double)
 
+
 object TwitterStreamMain{
 
   val KEYWORDS = Array("renault", "citroen", "volkswagen", "opel", "skoda", "fiat")
+  val warehouseLocation="spark-warehouse"
 
   def main(args: Array[String]) {
 
+    setupLogging()
+
     setupTwitter()
 
-    val ssc = new StreamingContext("local[*]", "PrintTweets", Seconds(1))
+    val sparkSession = SparkSession.builder
+      .master("local[*]")
+      .appName("TwitterStream")
+      .getOrCreate()
+
+    val ssc = new StreamingContext(sparkSession.sparkContext,Seconds(1))
     val esConf = Map("es.nodes" -> "0.0.0.0", "es.port" -> "9200", "es.nodes.wan.only" -> "true")
-    setupLogging()
+
 
     val tweets = TwitterUtils.createStream(ssc,None,KEYWORDS)
     val data = tweets.map { status =>
@@ -34,12 +40,9 @@ object TwitterStreamMain{
       (intersect)
     }
     data.foreachRDD{ rdd =>
+
       if (!rdd.isEmpty()) {
         val filteredHashtags = rdd.filter(x => x.nonEmpty)
-        val sparkSession = SparkSession.builder
-          .master("local")
-          .getOrCreate()
-
         import sparkSession.implicits._
 
 
@@ -48,7 +51,6 @@ object TwitterStreamMain{
 
 
         df.saveToEs("tweets/cars", esConf)
-
 
       }
     }

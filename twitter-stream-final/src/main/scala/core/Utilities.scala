@@ -1,15 +1,6 @@
-package core
 
-import org.apache.spark.SparkContext
-import org.apache.spark.sql.SQLContext
 
 object Utilities {
-  /** Makes sure only ERROR messages get logged to avoid log spam. */
-  def setupLogging() = {
-    import org.apache.log4j.{Level, Logger}
-    val rootLogger = Logger.getRootLogger()
-    rootLogger.setLevel(Level.ERROR)
-  }
 
   /** Configures Twitter service credentials using twiter.txt in the main workspace directory */
   def setupTwitter() = {
@@ -23,16 +14,10 @@ object Utilities {
       }
     }
   }
-}
 
-object SQLContextSingleton {
-
-  @transient  private var instance: SQLContext = _
-
-  def getInstance(sparkContext: SparkContext): SQLContext = {
-    if (instance == null) {
-      instance = new SQLContext(sparkContext)
-    }
-    instance
+  def setupLogging() = {
+    import org.apache.log4j.{Level, Logger}
+    val rootLogger = Logger.getRootLogger()
+    rootLogger.setLevel(Level.ERROR)
   }
 }
