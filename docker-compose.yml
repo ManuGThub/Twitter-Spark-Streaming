@@ -1,0 +1,62 @@
+version: '2'
+
+services:
+
+  elasticsearch:
+    image: 'elasticsearch:6.5.1'
+    container_name: kafka_elastic_search
+    hostname: elasticsearch
+    privileged: true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    depends_on:
+      - kafka
+  kibana:
+    image: 'kibana:6.5.1'
+    container_name: kafka_kibana
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200/
+
+  spark:
+      image: sequenceiq/spark:1.6.0
+      hostname: sandbox
+      command: bash
+      networks: 
+       - data-stream
+      ports:
+        - 8088:8088
+        - 8042:8042
+        - 4040:4040
+      volumes:
+        - ./target/scala-2.10:/tmp/app
+      tty: true
+
+  kafka:
+      image: spotify/kafka
+      networks: 
+        - data-stream
+      environment: 
+        - KAFKA=localhost:9092
+        - ZOOKEEPER=localhost:2181
+      links:
+        - spark
+      expose:
+       - '2181'
+       - '9092'
+
+networks: 
+  data-stream:
+    driver: bridge
