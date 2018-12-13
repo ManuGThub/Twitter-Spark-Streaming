@@ -3,10 +3,10 @@
 ## Current Solution
 
 ### Twitter Data
-Currently, the streaming solution prototytpe involves the use of the Twitter API to stream realtime twitter data. This is accomplished via the `twitter4j` and 'spark-streaming-twitter' libraries. To run this solution there is a requirement for access to the [Twitter API](https://apps.twitter.com/) (current solution uses account attached to tjcurry@qinetiq.com). To change the API keys used edit the options in PROJECT_ROOT/twitter-stream-final/src/main/resources/twitter.txt as appropriate.
+Currently, the streaming solution prototytpe involves the use of the Twitter API to stream realtime twitter data. This is accomplished via the `twitter4j` and 'spark-streaming-twitter' libraries. To run this solution there is a requirement for access to the [Twitter API](https://apps.twitter.com/) (current solution uses a private account. To change the API keys used edit the options in PROJECT_ROOT/twitter-stream-final/src/main/resources/twitter.txt as appropriate.
 
 ### Elasticsearch/Kibana/Spark
-To add some convenience to eventually porting the solution, the elasticsearch, spark and kibana instances are managed through a `docker-compose` setup. As the current solution in this project has not been finalised, it has not been `sbt assemble`'d for execution through the spark client container (it uses local spark contexts as its run through the IDE). In the TwitterAPIStream.scala file, there is an elasticsearch config specifically set up to talk to the instance in the container which can be changed at a later date to talk to the spark instance inside the docker network.
+To add some convenience to eventually porting the solution, the elasticsearch, spark and kibana instances are managed through a `docker-compose` setup. As the current solution in this project has not been finalised, it has not been `sbt assembled` for execution through the spark client container (it uses local spark contexts as its run through the IDE). In the TwitterAPIStream.scala file, there is an elasticsearch config specifically set up to talk to the instance in the container which can be changed at a later date to talk to the spark instance inside the docker network.
 
 ### Running the current solution
 Currently, the stream will acquire `hashtags`, `geo-data` and a text representation of the `place` from all incoming rdd's that have all three of these fields available. Obviously this might not be optimal data to collect but it essentially means we can plot locations of tweets to a map in kibana.
