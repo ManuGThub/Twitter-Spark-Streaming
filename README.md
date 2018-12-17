@@ -2,6 +2,8 @@
 
 ## Current Solution
 
+this repo is a modified version of : thomascurry/docker-spark-stream
+
 ### Twitter Data
 Currently, the streaming solution prototytpe involves the use of the Twitter API to stream realtime twitter data. This is accomplished via the `twitter4j` and 'spark-streaming-twitter' libraries. To run this solution there is a requirement for access to the [Twitter API](https://apps.twitter.com/) (current solution uses a private account. To change the API keys used edit the options in PROJECT_ROOT/twitter-stream-final/src/main/resources/twitter.txt as appropriate.
 
