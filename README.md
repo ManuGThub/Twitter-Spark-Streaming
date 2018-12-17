@@ -36,6 +36,6 @@ Ideally, I would have liked to got to a solution where both a assembled example 
 - Use [Spark Notebooks](http://spark-notebook.io/) to potentially present some of this in a nicer way (also has map widgets that can plot geo data)
 
 
-###Notes
+### Notes
 
 - adding the dependencies to build.sbt and using spark 2.3.0 version, the execution of the applications throws "java.lang.NoClassDefFoundError: org/apache/spark/Logging" and downgrading the spark version there is a problem resolving saveToEs method from SparkSQLAPI. So, seen that leaving the lib folder with the libraries there the app works fine (at least from IntelliJ) I decided to not modify it in order to avoid more problems. just miss to create the .jar using sbt assembly and run it using spark-submit command (note that in the docker-compose the JAR assembly directory is already mapped to a spark master's docker folder)
